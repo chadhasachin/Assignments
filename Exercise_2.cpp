@@ -74,9 +74,7 @@ public:
 
     explicit IntegerSequence(std::size_t size) 
     try : s_(size)
-    {
-        std::cout << size;
-    } 
+    {} 
     catch (std::bad_array_new_length&)
     {
         throw;
@@ -123,5 +121,78 @@ IntegerSequence operator+ (const IntegerSequence& lhs, const IntegerSequence& rh
 
     return ret;
 }
+
+// Create a sequence of consecutive numbers.
+IntegerSequence create_sequence(std::size_t size, std::uint32_t start_value)
+{
+    IntegerSequence s(size);
+    for(auto idx = 0; idx < size; idx++)
+        s[idx] = start_value + idx;
+
+    return s;
+}
+
+template <typename T>
+bool validate_assignment_operation()
+{
+    std::size_t size = 10;
+
+    T sequence_a = create_sequence(size, 0);
+    auto sequence_b = sequence_a;
+
+    //Positive test case, content and length equal
+    if(!(sequence_a  == sequence_b))
+    {
+        return false;
+    }
+
+    sequence_b[0] = 1;
+
+    // Negative test case, content unequal 
+    if((sequence_a  == sequence_b))
+    {
+        return false;
+    }
+
+    T sequence_c = create_sequence(size * 2, 0);
+    // Negative test case, unequal length, contents
+    if((sequence_a  == sequence_b))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 int main()
-{}
+{
+    auto ret = true;
+    
+    ret &= validate_assignment_operation<IntegerSequence>();           // const objects.
+    ret &= validate_assignment_operation<const IntegerSequence>();     // Non const objects.
+
+    // Validate + operator.
+    auto sequence_a = create_sequence(10, 0);   // 10 elements with start value 0
+    auto sequence_b = create_sequence(20, 10);  // 20 elements with start value 10
+    auto sequence_c = create_sequence(30, 0);   // 30 elements with start value 0
+    
+    auto sequence_d = sequence_a + sequence_b;  // 30 elements with contents of a followed by b
+
+    ret &= (sequence_c == sequence_d);
+
+    // Strong exception gurantee will be held due to use of unique pointers. Try allocating a very big array.
+
+    try 
+    {
+        auto sequence_too_big = create_sequence(UINT64_MAX, 0);
+    } 
+    catch(std::bad_array_new_length& e)
+    {
+        std::cout << "Caught: " << e.what() << std::endl;
+        ret &= (sequence_c == sequence_d);
+    }
+
+    std::cout << std::boolalpha;
+    std::cout << ret << std::endl;
+
+}
