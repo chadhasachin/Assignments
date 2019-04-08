@@ -110,7 +110,7 @@ public:
     }
 
 private:
-    Sequence<std::uint32_t> s_;
+    Sequence<std::int32_t> s_;
 };
 
 IntegerSequence operator+ (const IntegerSequence& lhs, const IntegerSequence& rhs)
