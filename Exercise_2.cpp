@@ -8,7 +8,8 @@ class Sequence
 {
 public:
     Sequence() = delete;
-
+    //! using std::size_t as point 1 says the that the count is non negative. If this needs to be enforces
+    //! I would prefer Strong type, similar to Exercise 1.
     explicit Sequence(std::size_t count) : size_(count), memory_(std::make_unique<T[]>(count))
     {}
 
