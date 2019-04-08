@@ -73,6 +73,7 @@ class IntegerSequence
 {
 public:
 
+    using sequence_data_type = std::int32_t;
     explicit IntegerSequence(std::size_t size) 
     try : s_(size)
     {} 
@@ -94,12 +95,12 @@ public:
         return (s_ == rhs.s_);
     }
 
-    std::uint32_t& operator[](std::size_t index) const
+    sequence_data_type& operator[](std::size_t index) const
     {
         return s_[index];
     }
 
-    std::uint32_t& at(std::size_t index) const
+    sequence_data_type& at(std::size_t index) const
     {
         return s_.at(index);
     }
@@ -110,7 +111,7 @@ public:
     }
 
 private:
-    Sequence<std::int32_t> s_;
+    Sequence<sequence_data_type> s_;
 };
 
 IntegerSequence operator+ (const IntegerSequence& lhs, const IntegerSequence& rhs)
